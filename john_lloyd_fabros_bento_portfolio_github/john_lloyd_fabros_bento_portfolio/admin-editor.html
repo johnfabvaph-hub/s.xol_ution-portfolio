@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Xol Portfolio · Private Admin Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080e18;--panel:#101b2b;--gold:#e8c56f;--line:rgba(232,197,111,.25);--muted:#9eacc0;--white:#f4f0e6}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 10% 0%,rgba(194,158,86,.08),transparent 32%),var(--bg);color:var(--white);font-family:Inter,Arial,sans-serif}
+.admin-head{position:sticky;top:0;z-index:5;background:rgba(5,10,18,.94);backdrop-filter:blur(18px);border-bottom:1px solid var(--line);padding:16px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{font:700 25px/1 'Cormorant Garamond',Georgia,serif;letter-spacing:.02em}.brand em{color:var(--gold)}.admin-label{font-size:10px;text-transform:uppercase;letter-spacing:.18em;color:var(--gold);margin-top:6px}
+.head-note{font-size:11px;color:var(--muted);text-align:right;line-height:1.5}
+.shell{max-width:1680px;margin:auto;padding:18px;display:grid;grid-template-columns:300px minmax(0,1fr);gap:16px;min-height:calc(100vh - 76px)}
+.panel{background:linear-gradient(145deg,rgba(19,31,49,.96),rgba(8,14,24,.98));border:1px solid var(--line);border-radius:16px;padding:17px;box-shadow:0 18px 50px rgba(0,0,0,.22);height:max-content;position:sticky;top:92px}
+h1{font:600 29px/1.05 'Cormorant Garamond',Georgia,serif;margin:0 0 8px}.sub{font-size:12px;color:var(--muted);line-height:1.65;margin:0 0 16px}
+.field{margin:13px 0}.field label{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.13em;color:#e7cb87;font-weight:800;margin-bottom:7px}
+input[type=file]{width:100%;font-size:11px;color:var(--muted)}
+button{font:650 12px/1.25 Inter,Arial,sans-serif;border-radius:9px;border:1px solid rgba(232,197,111,.38);background:rgba(255,255,255,.045);color:#f3e6c9;padding:10px 12px;cursor:pointer;transition:background .2s,border-color .2s,transform .2s}
+button:hover{background:rgba(232,197,111,.12);border-color:rgba(232,197,111,.72);transform:translateY(-1px)}button.primary{background:linear-gradient(120deg,#f0d99f,#c89c49);color:#121927;border:0;font-weight:800}
+button:disabled{opacity:.4;cursor:not-allowed;transform:none}.button-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.button-grid .wide{grid-column:1/-1}
+.status{border-left:2px solid var(--gold);background:rgba(255,255,255,.045);padding:10px 11px;margin:14px 0;color:#c1ccdc;font-size:11px;line-height:1.6}
+.tip{font-size:10px;line-height:1.6;color:#93a2b8;margin:12px 0}.warning{color:#e7d4a6;border-top:1px solid rgba(255,255,255,.08);padding-top:12px}
+.preview-wrap{min-width:0;border:1px solid rgba(232,197,111,.2);border-radius:16px;overflow:hidden;background:#070c17;box-shadow:0 18px 55px rgba(0,0,0,.3)}.preview-bar{height:42px;display:flex;align-items:center;justify-content:space-between;padding:0 13px;background:#0b1422;border-bottom:1px solid rgba(255,255,255,.08);font-size:10px;color:#aebbd0;letter-spacing:.08em;text-transform:uppercase}.preview{display:block;width:100%;height:calc(100vh - 150px);min-height:680px;border:0;background:#070c17}
+body.admin-editing .preview{outline:2px solid rgba(232,197,111,.36);outline-offset:-2px}
+@media(max-width:1000px){.shell{grid-template-columns:1fr}.panel{position:relative;top:auto}.preview{height:78vh;min-height:600px}}
+@media(max-width:620px){.admin-head{padding:13px}.head-note{display:none}.shell{padding:10px}.preview{height:70vh;min-height:480px}.button-grid{grid-template-columns:1fr 1fr}}
+</style></head>
+<body>
+<header class="admin-head"><div><div class="brand">JOHN LLOYD <em>FABROS</em></div><div class="admin-label">Private Admin Studio · Local Editing</div></div><div class="head-note">Your editor stays on your device.<br>Only the exported index.html is published.</div></header>
+<div class="shell">
+<aside class="panel">
+  <h1>Portfolio Admin</h1>
+  <p class="sub">Load your website, make visual edits, then export a clean GitHub-ready file. No coding required for text, images or links.</p>
+  <div class="field"><label for="siteFile">1 · Open your website file</label><input id="siteFile" type="file" accept=".html,text/html"></div>
+  <div class="status" id="status">No website loaded yet. Choose your current index.html to begin.</div>
+  <div class="field"><label>2 · Choose an editing mode</label>
+    <div class="button-grid">
+      <button id="textMode" disabled>Edit text</button><button id="linkMode" disabled>Edit links</button>
+      <button id="imageMode" disabled>Replace images</button><button id="finishMode" disabled>Finish mode</button>
+    </div>
+  </div>
+  <div class="field"><label for="imageFile">Selected image replacement</label><input id="imageFile" type="file" accept="image/*" disabled></div>
+  <div class="button-grid"><button id="exportBtn" class="primary wide" disabled>Export updated index.html</button><button id="reloadBtn" class="wide" disabled>Discard edits & reload original</button></div>
+  <p class="tip"><b>Text:</b> turn on Edit text, then double-click a heading, paragraph, label or button in the preview. Click outside it to finish.</p>
+  <p class="tip"><b>Links:</b> turn on Edit links, then click a navigation item or button to change its destination (for example <code>#contact</code> or <code>mailto:name@example.com</code>).</p>
+  <p class="tip"><b>Images:</b> turn on Replace images, click an image in the preview, then choose its replacement file. Image files are embedded in the exported website.</p>
+  <p class="tip warning">Admin privacy: keep this Admin Studio file private and do not upload it to your public GitHub Pages repository. Upload only index.html. GitHub Pages is static hosting, so this local editor is a private owner workspace—not a public website login system.</p>
+</aside>
+<section class="preview-wrap"><div class="preview-bar"><span>Live website preview</span><span id="modeLabel">VIEW MODE</span></div><iframe id="preview" class="preview" title="Portfolio preview"></iframe></section>
+</div>
+<script>
+(()=>{
+ const $=id=>document.getElementById(id), fileInput=$('siteFile'), frame=$('preview'), status=$('status');
+ let original='', fileName='index.html', mode='view', selectedImage=null, loaded=false;
+ const buttons=['textMode','linkMode','imageMode','finishMode','exportBtn','reloadBtn','imageFile'];
+ function setStatus(t){status.textContent=t;}
+ function setMode(next){mode=next;document.body.classList.toggle('admin-editing',next!=='view');$('modeLabel').textContent=next.toUpperCase()+' MODE';
+  ['textMode','linkMode','imageMode'].forEach(id=>$(id).classList.toggle('primary',id===({text:'textMode',links:'linkMode',images:'imageMode'}[next])));
+  if(loaded)setStatus(next==='view'?'View mode. Choose an editing mode to make changes.':next==='text'?'Text mode: double-click any text in the preview to edit it.':next==='links'?'Link mode: click a button or navigation link to change its destination.':'Image mode: click an image, then choose a replacement file.');
+ }
+ function bindFrame(){
+  const d=frame.contentDocument;if(!d)return;
+  // Avoid running a second editor from older exports.
+  d.getElementById('xolEditorDock')?.remove();
+  d.addEventListener('dblclick',e=>{
+   if(mode!=='text')return;
+   const el=e.target.closest('h1,h2,h3,h4,h5,p,li,a,button,span,strong,b,small,label,em');
+   if(!el||el.closest('script,style,svg,#xolEditorDock'))return;
+   e.preventDefault();e.stopPropagation();
+   d.querySelectorAll('[data-local-admin-edit="1"]').forEach(x=>{x.contentEditable='false';x.removeAttribute('data-local-admin-edit');});
+   el.contentEditable='true';el.dataset.localAdminEdit='1';el.focus();
+   const range=d.createRange();range.selectNodeContents(el);const sel=d.getSelection();sel.removeAllRanges();sel.addRange(range);
+   setStatus('Editing selected text. Type your replacement, then click outside the text to finish.');
+  },true);
+  d.addEventListener('focusout',e=>{const el=e.target;if(el&&el.dataset&&el.dataset.localAdminEdit==='1'){el.contentEditable='false';el.removeAttribute('data-local-admin-edit');setStatus('Text updated in preview. Export the website when finished.');}},true);
+  d.addEventListener('click',e=>{
+   if(mode==='links'){
+    const a=e.target.closest('a');if(a){e.preventDefault();e.stopPropagation();const current=a.getAttribute('href')||'';const next=prompt('Enter the destination for this link:',current);if(next!==null){a.setAttribute('href',next.trim());setStatus('Link destination updated.');}return;}
+   }
+   if(mode==='images'){
+    const img=e.target.closest('img');if(img){e.preventDefault();e.stopPropagation();selectedImage=img;$('imageFile').disabled=false;$('imageFile').click();setStatus('Image selected. Choose a replacement file in the left panel.');}
+   }
+  },true);
+ }
+ function loadSite(text,name){original=text;fileName=name||'index.html';frame.srcdoc=text;frame.onload=()=>{loaded=true;bindFrame();buttons.forEach(id=>$(id).disabled=false);$('imageFile').disabled=true;setMode('view');setStatus('Website loaded: '+fileName+'. Preview is ready. Your original file is unchanged until you export.');};}
+ fileInput.addEventListener('change',async e=>{const f=e.target.files&&e.target.files[0];if(!f)return;loadSite(await f.text(),f.name);});
+ $('textMode').addEventListener('click',()=>setMode(mode==='text'?'view':'text'));
+ $('linkMode').addEventListener('click',()=>setMode(mode==='links'?'view':'links'));
+ $('imageMode').addEventListener('click',()=>setMode(mode==='images'?'view':'images'));
+ $('finishMode').addEventListener('click',()=>{setMode('view');const d=frame.contentDocument;d?.querySelectorAll('[data-local-admin-edit="1"]').forEach(x=>{x.contentEditable='false';x.removeAttribute('data-local-admin-edit');});});
+ $('imageFile').addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];if(!f||!selectedImage)return;const reader=new FileReader();reader.onload=()=>{selectedImage.src=reader.result;selectedImage=null;$('imageFile').value='';$('imageFile').disabled=true;setStatus('Image replaced in preview and embedded. Export when finished.');};reader.readAsDataURL(f);});
+ $('reloadBtn').addEventListener('click',()=>{if(!original)return;if(!confirm('Discard all preview edits and reload the original file?'))return;loadSite(original,fileName);});
+ $('exportBtn').addEventListener('click',()=>{
+  const d=frame.contentDocument;if(!d)return;
+  d.querySelectorAll('[data-local-admin-edit="1"]').forEach(x=>{x.contentEditable='false';x.removeAttribute('data-local-admin-edit');});
+  const clone=d.documentElement.cloneNode(true);
+  clone.querySelector('#xolEditorDock')?.remove();
+  clone.querySelectorAll('[contenteditable]').forEach(el=>el.removeAttribute('contenteditable'));
+  clone.querySelectorAll('[data-local-admin-edit]').forEach(el=>el.removeAttribute('data-local-admin-edit'));
+  const html='<!doctype html>\n'+clone.outerHTML;
+  const blob=new Blob([html],{type:'text/html;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='index.html';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
+  setStatus('Export complete. Upload this index.html to the root of your GitHub repository and commit to main. Keep this Admin Studio private.');setMode('view');
+ });
+})();
+</script>
+</body></html>
